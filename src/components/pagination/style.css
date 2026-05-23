@@ -3,3 +3,14 @@
     grid-template-columns: repeat(3, 1fr);
     row-gap: 20px;
 }
+
+button{
+    border: 0;
+    outline: 0;
+    padding: 10px;
+    margin: 0px 5px;
+}
+
+.active{
+    background-color: dodgerblue;
+}
