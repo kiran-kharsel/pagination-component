@@ -7,6 +7,16 @@ const ITEMS_PER_PAGE = 10;
 function Pagination() {
     const [items, setItems] = useState([]);
     const [pages, setPages] = useState([]);
+    const [startPoint, setStartPoint] = useState(0);
+    const [endPoint, setEndPoint] = useState(ITEMS_PER_PAGE);
+
+    function handlePageClick(pageNo) {
+        return () => {
+            setEndPoint(ITEMS_PER_PAGE * pageNo);
+            setStartPoint(endPoint)
+        }
+    }
+
 
 
     useEffect(() => {
@@ -23,31 +33,25 @@ function Pagination() {
             .catch(err => console.error(err))
     }, []);
 
-    // useEffect(() => {
-    //     if (items.length > 0) {
-    //         let totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-    //         let arr = Array.from({ length: totalPages }, (_, i) => i + 1);
-    //         setPages(arr);
-    //         console.log(arr);
-    //     }
-    // }, [])
 
     return (
         <div>
             <h1>recipe list</h1>
 
             <div className="content">
-                {items.map((item) => {
-                    return (
-                        <Card key={item.id} name={item.name} image={item.image} />
-                    )
-                })}
+                {
+                    items.slice(startPoint, endPoint).map((item) => {
+                        return (
+                            <Card key={item.id} name={item.name} image={item.image} />
+                        )
+                    })
+                }
             </div>
             <div className="pages">
                 {
                     pages.map((page) => {
                         return (
-                            <button key={page}>{page}</button>
+                            <button onClick={handlePageClick(page)} key={page}>{page}</button>
                         )
                     })
                 }
