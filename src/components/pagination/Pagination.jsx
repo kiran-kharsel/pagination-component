@@ -7,13 +7,11 @@ const ITEMS_PER_PAGE = 10;
 function Pagination() {
     const [items, setItems] = useState([]);
     const [pages, setPages] = useState([]);
-    const [startPoint, setStartPoint] = useState(0);
-    const [endPoint, setEndPoint] = useState(ITEMS_PER_PAGE);
+    const [currentPage, setCurrentPage] = useState(1)
 
     function handlePageClick(pageNo) {
         return () => {
-            setEndPoint(ITEMS_PER_PAGE * pageNo);
-            setStartPoint(endPoint)
+            setCurrentPage(pageNo)
         }
     }
 
@@ -33,31 +31,49 @@ function Pagination() {
             .catch(err => console.error(err))
     }, []);
 
+    // Slice items based on current page
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = currentPage * ITEMS_PER_PAGE;
+    const visibleItems = items.slice(startIndex, endIndex);
+
 
     return (
         <div>
-            <h1>recipe list</h1>
+            <h1>Recipe List</h1>
 
             <div className="content">
-                {
-                    items.slice(startPoint, endPoint).map((item) => {
-                        return (
-                            <Card key={item.id} name={item.name} image={item.image} />
-                        )
-                    })
-                }
+                {visibleItems.map(item => (
+                    <Card key={item.id} name={item.name} image={item.image} />
+                ))}
             </div>
+
             <div className="pages">
-                {
-                    pages.map((page) => {
-                        return (
-                            <button onClick={handlePageClick(page)} key={page}>{page}</button>
-                        )
-                    })
-                }
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                >
+                    Prev
+                </button>
+
+                {pages.map(page => (
+                    <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={page === currentPage ? 'active' : ''}
+                    >
+                        {page}
+                    </button>
+                ))}
+
+                <button
+                    disabled={currentPage === pages.length}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                >
+                    Next
+                </button>
             </div>
         </div>
-    )
+    );
 }
 
 export default Pagination
