@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './style.css'
+import Card from '../card/Card';
 
 function Pagination() {
     const [items, setItems] = useState([]);
@@ -18,10 +19,9 @@ function Pagination() {
   return (
     <div>
         <div className="content">
-            {/* {items[0].name} */}
             {items.map((item) => {
                 return (
-                    <div key={item.id}>{item.name}</div>
+                    <Card key={item.id} name={item.name} image={item.image}/>
                 )
             })}
         </div>
